@@ -16,6 +16,10 @@ import org.apache.logging.log4j.Logger;
 )
 public class TTablets {
 
+    //It's a mess of "borrowed" code and still working on this but hey, time for agony
+    //Check out MrCrayfish's Device mod!
+
+
 
     public static final String MOD_ID = "ttablets";
     public static final String MOD_NAME = "ttablets";

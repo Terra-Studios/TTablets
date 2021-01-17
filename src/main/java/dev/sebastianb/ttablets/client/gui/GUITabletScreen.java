@@ -44,26 +44,11 @@ public class GUITabletScreen extends GuiScreen {
         GlStateManager.pushMatrix();
         {
 
-            double scaledX = (double) width / GUI_WIDTH;
-
-
-
-            GlStateManager.scale(scaledX,scaledX,0);
-
-
-
-
-            //GlStateManager.scale(1.9F,1.9F,0);
-
-
-            GlStateManager.translate(0,0,0);
-
-
-
-
-
             mc.renderEngine.bindTexture(RESOURCE_BACKGROUND);
-            drawTexturedModalRect(0,0, 0,0, GUI_WIDTH, GUI_HEIGHT);
+            drawTexturedModalRect(mouseX / 2,mouseY / 2, 0,0, GUI_WIDTH, GUI_HEIGHT);
+
+
+
         }
         GlStateManager.popMatrix();
 
