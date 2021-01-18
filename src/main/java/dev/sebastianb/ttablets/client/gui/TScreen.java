@@ -15,10 +15,12 @@ public class TScreen extends GuiScreen {
 
     //Code "borrowed" from web displays. Check out the mod!
 
-
+    public static TScreen CURRENT_SCREEN = null;
 
     private final HashMap<Class<? extends Event>, Method> eventMap = new HashMap<>();
 
+    protected int syncTicks = 40;
+    private int syncTicksLeft = -1;
 
 
     public TScreen() {
@@ -40,6 +42,44 @@ public class TScreen extends GuiScreen {
         }
 
     }
+
+
+
+
+    protected void requestSync() {
+        syncTicksLeft = syncTicks - 1;
+    }
+
+    protected boolean syncRequested() {
+        return syncTicksLeft >= 0;
+    }
+
+    protected void abortSync() {
+        syncTicksLeft = -1;
+    }
+
+    protected void sync() {
+
+    }
+
+
+    @Override
+    public void updateScreen() {
+        if(syncTicksLeft >= 0) {
+            if(--syncTicksLeft < 0) {
+                sync();
+            }
+        }
+    }
+
+    @Override
+    public boolean doesGuiPauseGame() {
+        return false;
+    }
+
+
+
+
 }
 
 @Target(ElementType.METHOD)

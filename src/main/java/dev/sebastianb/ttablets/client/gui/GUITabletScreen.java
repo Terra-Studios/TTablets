@@ -19,7 +19,7 @@ import java.util.TimerTask;
 
 
 @SideOnly(Side.CLIENT)
-public class GUITabletScreen extends GuiScreen {
+public class GUITabletScreen extends TScreen {
 
     protected static final ResourceLocation RESOURCE_BACKGROUND = Resources.Gui.TABLET;
 
@@ -88,7 +88,9 @@ public class GUITabletScreen extends GuiScreen {
                     }
                 }
             }
-            System.out.println(t1.getNumber());
+            if (t1.getNumber() % 20 == 0) {
+                System.out.println(t1.getNumber());
+            }
 
 
 
@@ -122,10 +124,8 @@ public class GUITabletScreen extends GuiScreen {
         super.actionPerformed(button);
     }
 
-    @Override
-    public boolean doesGuiPauseGame() {
-        return false;
-    }
+
+
 }
 
 class Task extends TimerTask {
