@@ -1,7 +1,6 @@
 {
-  "pack": {
-    "description": "TTablet Resources",
-    "pack_format": 3,
-    "_comment": "TTablet Utils"
-  }
+    "pack": {
+        "description": "ttablets resources",
+        "pack_format": 6
+    }
 }

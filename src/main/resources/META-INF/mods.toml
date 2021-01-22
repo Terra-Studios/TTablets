@@ -1,0 +1,26 @@
+modLoader="javafml" #mandatory
+loaderVersion="[36,)"
+license="All rights reserved"
+
+[[mods]]
+modId="ttablets"
+version="${file.jarVersion}"
+displayName="TTablets"
+logoFile="logo.png"
+authors="SebaSphere#0001 and craftablescience#6001"
+description='''
+Adds a tablet to the game, so you can play games inside a game
+'''
+
+[[dependencies.ttablets]]
+    modId="forge"
+    mandatory=true
+    versionRange="[36,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.ttablets]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.5,1.17)"
+    ordering="NONE"
+    side="BOTH"

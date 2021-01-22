@@ -1,68 +1,34 @@
 package dev.sebastianb.ttablets;
 
-
-import dev.sebastianb.ttablets.client.gui.GuiHandler;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import dev.sebastianb.ttablets.util.TTabletRegistry;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod(
-        modid = TTablets.MOD_ID,
-        name = TTablets.MOD_NAME,
-        version = TTablets.VERSION
-)
+
+@Mod(TTablets.MOD_ID)
 public class TTablets {
 
-    //It's a mess of "borrowed" code and still working on this but hey, time for agony
-    //Check out MrCrayfish's Device mod!
-
-
-
     public static final String MOD_ID = "ttablets";
-    public static final String MOD_NAME = "ttablets";
-    public static final String VERSION = "1.0-SNAPSHOT";
 
 
-    public static final Logger TERRA_UTILS_MOD_LOG = LogManager.getLogger(MOD_ID);
-
-
-
-
-    /**
-     * This is the instance of your mod as created by Forge. It will never be null.
-     */
-    @Mod.Instance(MOD_ID)
-    public static TTablets INSTANCE;
-
-    /**
-     * This is the first initialization event. Register tile entities here.
-     * The registry events below will have fired prior to entry to this method.
-     */
-    @Mod.EventHandler
-    public void preinit(FMLPreInitializationEvent event) {
-        GuiHandler.init();
-
-
+    public TTablets() {
+        IEventBus EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
+        registerComponents(EVENT_BUS);
+        //registerCommonEvents(EVENT_BUS);
+        //DistExecutor.runWhenOn(Dist.CLIENT, () -> TTablets::registerClientEvents);
     }
 
-    /**
-     * This is the second initialization event. Register custom recipes
-     */
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event) {
-
+    public static void registerComponents(final IEventBus EVENT_BUS) {
+        TTabletRegistry.ITEM_REGISTRY.register(EVENT_BUS);
     }
 
-    /**
-     * This is the final initialization event. Register actions from other mods here
-     */
-    @Mod.EventHandler
-    public void postinit(FMLPostInitializationEvent event) {
-
+    /*public static void registerCommonEvents(final IEventBus EVENT_BUS) {
+        EVENT_BUS.register(EventSubscribers.class);
     }
 
-
+    public static void registerClientEvents() {
+        IEventBus EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
+        EVENT_BUS.register(ClientEventSubscribers.class);
+    }*/
 }
