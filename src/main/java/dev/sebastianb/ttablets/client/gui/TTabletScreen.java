@@ -20,8 +20,8 @@ public class TTabletScreen extends Screen {
 
     private static final int WIDTH = 243;
     private static final int HEIGHT = 209;
-    private static final int SCREEN_WIDTH = 143;
-    private static final int SCREEN_HEIGHT = 114;
+    private static final int SCREEN_WIDTH = 1144; // 143
+    private static final int SCREEN_HEIGHT = 912; // 114
 
     private NativeImage SCREEN;
     // remember to call updateDynamicTexture() every time the screen changes
@@ -52,12 +52,13 @@ public class TTabletScreen extends Screen {
         }
     }
 
+
     @Override
     public void init() {
         super.init();
         this.bootTime.run();
         this.buttons.clear();
-        this.SCREEN = new NativeImage(143, 114, true);
+        this.SCREEN = new NativeImage(1144, 912, true);
         this.SCREEN_TEXTURE = new DynamicTexture(SCREEN);
         this.SCREEN_TEXTURE_LOCATION = Minecraft.getInstance().getTextureManager().getDynamicTextureLocation("ttablet_screen", SCREEN_TEXTURE);
     }
@@ -75,6 +76,8 @@ public class TTabletScreen extends Screen {
 
         displayColors();
 
+        RenderSystem.scalef(0.125f, 0.125f, 0.125f);
+
         this.SCREEN_TEXTURE.updateDynamicTexture();
         Minecraft.getInstance().getTextureManager().bindTexture(SCREEN_TEXTURE_LOCATION);
         this.blit(matrix, centerX + 25, centerY + 67, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -90,7 +93,7 @@ public class TTabletScreen extends Screen {
 
     @Override
     public void closeScreen() {
-        // todo: save state of screen
+        // TODO: save state of screen
         super.closeScreen();
     }
 
