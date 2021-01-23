@@ -46,13 +46,14 @@ public class TTabletScreen extends Screen {
 
     @Override
     public void render(@Nonnull MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
-        // todo: render screen at 320x240
+        //TODO: render screen at 320x240
         this.renderBackground(matrix);
         int centerX = (width / 2) - WIDTH / 2;
         int centerY = (height / 2) - HEIGHT / 2;
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getInstance().getTextureManager().bindTexture(RESOURCE_BACKGROUND);
         this.blit(matrix, centerX, centerY, 0, 0, WIDTH, HEIGHT);
+
 
         int[] colors = new int[]{0xFF0000FF, 0xFF00FF00, 0xFFFF0000};
         int color = colors[this.bootTime.getTimeSeconds() % 3];
@@ -73,6 +74,11 @@ public class TTabletScreen extends Screen {
     public void closeScreen() {
         // todo: save state of screen
         super.closeScreen();
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
     }
 
 
