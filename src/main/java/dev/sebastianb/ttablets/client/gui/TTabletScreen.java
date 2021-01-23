@@ -34,6 +34,24 @@ public class TTabletScreen extends Screen {
         super(new TranslationTextComponent("ttablets"));
     }
 
+
+    /**
+     * test method to alternate between colors
+     */
+    protected void displayColors() {
+        int blue = 0xFF0000FF;
+        int green = 0xFF00FF00;
+        int red = 0xFFFF0000;
+
+        int[] colors = new int[]{blue, green, red};
+        int color = colors[this.bootTime.getTimeSeconds() % 3];
+        for (int x = 0; x < SCREEN_WIDTH; x++) {
+            for (int y = 0; y < SCREEN_HEIGHT; y++) {
+                this.SCREEN.setPixelRGBA(x, y, color);
+            }
+        }
+    }
+
     @Override
     public void init() {
         super.init();
@@ -55,13 +73,7 @@ public class TTabletScreen extends Screen {
         this.blit(matrix, centerX, centerY, 0, 0, WIDTH, HEIGHT);
 
 
-        int[] colors = new int[]{0xFF0000FF, 0xFF00FF00, 0xFFFF0000};
-        int color = colors[this.bootTime.getTimeSeconds() % 3];
-        for (int x = 0; x < SCREEN_WIDTH; x++) {
-            for (int y = 0; y < SCREEN_HEIGHT; y++) {
-                this.SCREEN.setPixelRGBA(x, y, color);
-            }
-        }
+        displayColors();
 
         this.SCREEN_TEXTURE.updateDynamicTexture();
         Minecraft.getInstance().getTextureManager().bindTexture(SCREEN_TEXTURE_LOCATION);
@@ -70,16 +82,19 @@ public class TTabletScreen extends Screen {
         super.render(matrix, mouseX, mouseY, partialTicks);
     }
 
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
+
     @Override
     public void closeScreen() {
         // todo: save state of screen
         super.closeScreen();
     }
 
-    @Override
-    public boolean isPauseScreen() {
-        return false;
-    }
+
 
 
     private static class BootTime extends TimerTask {
