@@ -9,6 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
@@ -21,6 +23,7 @@ public class TTabletItem extends Item {
 
     @Override
     @Nonnull
+    @OnlyIn(Dist.CLIENT)
     public ActionResult<ItemStack> onItemRightClick(World world, @Nonnull PlayerEntity player, @Nonnull Hand hand) {
         if (world.isRemote) {
             Minecraft.getInstance().displayGuiScreen(new TTabletScreen());
