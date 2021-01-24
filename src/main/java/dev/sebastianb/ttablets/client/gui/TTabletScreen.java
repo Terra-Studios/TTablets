@@ -49,7 +49,7 @@ public class TTabletScreen extends Screen {
         int red = 0xFFFF0000;
 
         int[] colors = new int[]{blue, green, red};
-        int color = colors[this.bootTime.getTimeSeconds() % 3];
+        int color = colors[this.bootTime.getTimeSeconds() % colors.length];
         for (int x = 0; x < SCREEN_WIDTH; x++) {
             for (int y = 0; y < SCREEN_HEIGHT; y++) {
                 this.SCREEN.setPixelRGBA(x, y, color);
