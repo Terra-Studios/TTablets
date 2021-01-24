@@ -9,6 +9,8 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nonnull;
 import java.util.TimerTask;
@@ -77,8 +79,6 @@ public class TTabletScreen extends Screen {
         Minecraft.getInstance().getTextureManager().bindTexture(RESOURCE_BACKGROUND);
         this.blit(matrix, centerX, centerY, 0, 0, WIDTH, HEIGHT);
 
-
-
         displayColors();
         RenderSystem.scalef(DOWNSCALED_VALUE, DOWNSCALED_VALUE, DOWNSCALED_VALUE);
 
@@ -87,6 +87,8 @@ public class TTabletScreen extends Screen {
         Minecraft.getInstance().getTextureManager().bindTexture(SCREEN_TEXTURE_LOCATION);
 
         this.blit(matrix, ((width / 2) * SCALED_NUMBER) - (96 * SCALED_NUMBER), ((height / 2) * SCALED_NUMBER) - (37 * SCALED_NUMBER), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+
 
 
         super.render(matrix, mouseX, mouseY, partialTicks);
