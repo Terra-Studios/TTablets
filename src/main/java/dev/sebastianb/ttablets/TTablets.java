@@ -13,11 +13,13 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 public class TTablets {
 
     public static final String MOD_ID = "ttablets";
+    public static IEventBus MOD_EVENT_BUS;
+
 
 
     public TTablets() {
-        IEventBus EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
-        registerComponents(EVENT_BUS);
+        MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
+        registerComponents(MOD_EVENT_BUS);
         //registerCommonEvents(EVENT_BUS);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> TTablets::registerClientEvents);
     }
@@ -32,7 +34,6 @@ public class TTablets {
 
     public static void registerClientEvents() {
         System.out.println("HELLO");
-        IEventBus EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
-        EVENT_BUS.register(TestEvents.class);
+        MOD_EVENT_BUS.register(new TestEvents());
     }
 }
