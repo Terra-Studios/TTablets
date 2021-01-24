@@ -18,10 +18,15 @@ public class TTabletScreen extends Screen {
 
     private static final ResourceLocation RESOURCE_BACKGROUND = new ResourceLocation(TTablets.MOD_ID, "textures/gui/ttablet_background.png");
 
-    private static final int WIDTH = 243;
-    private static final int HEIGHT = 209;
-    private static final int SCREEN_WIDTH = 1144; // 143
-    private static final int SCREEN_HEIGHT = 912; // 114
+    private static final int WIDTH                  = 243;
+    private static final int HEIGHT                 = 209;
+    private static final int SCREEN_PLACE_WIDTH     = 143; // this variable & one beneath is the base resolution in pixels
+    private static final int SCREEN_PLACE_HEIGHT    = 114;
+    private static final int SCALED_NUMBER          = 8;
+    private static final int SCREEN_WIDTH           = SCREEN_PLACE_WIDTH * SCALED_NUMBER;
+    private static final int SCREEN_HEIGHT          = SCREEN_PLACE_HEIGHT * SCALED_NUMBER;
+
+    private static final float DOWNSCALED_VALUE     = 1f / SCALED_NUMBER; // 0.125 or 1/8 | this value is used to properly scale the screen
 
     private NativeImage SCREEN;
     // remember to call updateDynamicTexture() every time the screen changes
@@ -65,7 +70,6 @@ public class TTabletScreen extends Screen {
 
     @Override
     public void render(@Nonnull MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
-        //TODO: render screen at 320x240
         this.renderBackground(matrix);
         int centerX = (width / 2) - WIDTH / 2;
         int centerY = (height / 2) - HEIGHT / 2;
@@ -74,13 +78,16 @@ public class TTabletScreen extends Screen {
         this.blit(matrix, centerX, centerY, 0, 0, WIDTH, HEIGHT);
 
 
-        displayColors();
 
-        RenderSystem.scalef(0.125f, 0.125f, 0.125f);
+        displayColors();
+        RenderSystem.scalef(DOWNSCALED_VALUE, DOWNSCALED_VALUE, DOWNSCALED_VALUE);
+
 
         this.SCREEN_TEXTURE.updateDynamicTexture();
         Minecraft.getInstance().getTextureManager().bindTexture(SCREEN_TEXTURE_LOCATION);
-        this.blit(matrix, centerX + 25, centerY + 67, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+        this.blit(matrix, ((width / 2) * SCALED_NUMBER) - (96 * SCALED_NUMBER), ((height / 2) * SCALED_NUMBER) - (37 * SCALED_NUMBER), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
 
         super.render(matrix, mouseX, mouseY, partialTicks);
     }
