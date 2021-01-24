@@ -1,6 +1,6 @@
 package dev.sebastianb.ttablets;
 
-import dev.sebastianb.ttablets.events.TestEvents;
+import dev.sebastianb.ttablets.client.ClientTestEvents;
 import dev.sebastianb.ttablets.util.TTabletRegistry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -34,6 +34,6 @@ public class TTablets {
 
     public static void registerClientEvents() {
         System.out.println("HELLO");
-        MOD_EVENT_BUS.register(new TestEvents());
+        MOD_EVENT_BUS.register(new ClientTestEvents());
     }
 }
