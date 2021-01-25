@@ -69,6 +69,14 @@ public class GIF {
     }
 
     /**
+     * Returns the ResourceLocation pointing to the GIF.
+     * @return The GIF's ResourceLocation.
+     */
+    public ResourceLocation getResourceLocation() {
+        return this.GIF;
+    }
+
+    /**
      * Checks if the frame index specified is valid.
      * @param frame The frame index.
      * @return The validity of the index.
