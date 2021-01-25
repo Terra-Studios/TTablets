@@ -93,12 +93,15 @@ public class TTabletScreen extends Screen {
             for (int x = 0; x < SCREEN_WIDTH; x++) {
                 for (int y = 0; y < SCREEN_HEIGHT; y++) {
                     this.SCREEN.setPixelRGBA(x,y, image.getPixelRGBA(x,y));
+
                 }
             }
-
-        } catch (IOException e) {
+            System.out.println(image.getHeight());
+            System.out.println("This: " + SCREEN_HEIGHT);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
 
@@ -135,6 +138,7 @@ public class TTabletScreen extends Screen {
         Minecraft.getInstance().getTextureManager().bindTexture(SCREEN_TEXTURE_LOCATION);
 
         this.blit(matrix, ((width / 2) * SCALED_NUMBER) - (96 * SCALED_NUMBER), ((height / 2) * SCALED_NUMBER) - (37 * SCALED_NUMBER), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        //this.blit(matrix, centerX, centerY, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 
 
