@@ -136,8 +136,12 @@ public class TTabletScreen extends Screen {
                 buffer.put((byte)((pixel >> 24) & 0xFF));
             }
         }
+        displayGLImage(buffer, image.getWidth(), image.getHeight());
+    }
+
+    public void displayGLImage(ByteBuffer image, int width, int height) {
         // render as 2D image, max LOD Level, width, height, no border, alpha on, texel data type (idk what that is), and texture
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) buffer.flip());
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) image.flip());
     }
 
 
