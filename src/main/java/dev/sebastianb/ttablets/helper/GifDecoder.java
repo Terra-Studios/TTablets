@@ -1,4 +1,4 @@
-package dev.sebastianb.ttablets.decoder;
+package dev.sebastianb.ttablets.helper;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -105,7 +105,7 @@ public class GifDecoder {
     protected ArrayList frames; // frames read from current file
     protected int frameCount;
 
-    static class GifFrame {
+    private static class GifFrame {
         public GifFrame(BufferedImage im, int del) {
             image = im;
             delay = del;
