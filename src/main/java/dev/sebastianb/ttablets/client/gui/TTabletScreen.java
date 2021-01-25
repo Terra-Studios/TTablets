@@ -3,6 +3,7 @@ package dev.sebastianb.ttablets.client.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.sebastianb.ttablets.TTablets;
+import dev.sebastianb.ttablets.decoder.GifDecoder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -13,20 +14,26 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nonnull;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.TimerTask;
 
 
 public class TTabletScreen extends Screen {
 
     private static final ResourceLocation RESOURCE_BACKGROUND = new ResourceLocation(TTablets.MOD_ID, "textures/gui/ttablet_background.png");
+    private static final ResourceLocation TEST_GIF = new ResourceLocation(TTablets.MOD_ID, "media/gif/weeb.gif");
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
+
 
     private static final int WIDTH                  = 243;
     private static final int HEIGHT                 = 209;
     private static final int SCREEN_PLACE_WIDTH     = 143; // this variable & one beneath is the base resolution in pixels
     private static final int SCREEN_PLACE_HEIGHT    = 114;
     private static final int SCALED_NUMBER          = 8;
-    private static final int SCREEN_WIDTH           = SCREEN_PLACE_WIDTH * SCALED_NUMBER;
-    private static final int SCREEN_HEIGHT          = SCREEN_PLACE_HEIGHT * SCALED_NUMBER;
+    private static final int SCREEN_WIDTH           = SCREEN_PLACE_WIDTH * SCALED_NUMBER;  // 1144
+    private static final int SCREEN_HEIGHT          = SCREEN_PLACE_HEIGHT * SCALED_NUMBER; //  912
 
     private static final float DOWNSCALED_VALUE     = 1f / SCALED_NUMBER; // 0.125 or 1/8 | this value is used to properly scale the screen
 
@@ -60,6 +67,41 @@ public class TTabletScreen extends Screen {
     }
 
 
+    protected InputStream readGifFrame(int frameNum) {
+        GifDecoder d = new GifDecoder();
+
+        try {
+            InputStream GIF = Minecraft.getInstance().getResourceManager().getResource(TEST_GIF).getInputStream();
+            d.read(GIF);
+
+            BufferedImage a = d.getFrame(frameNum);
+            ImageIO.write(a, "gif", os);
+
+            return new ByteArrayInputStream(os.toByteArray());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Oopsie whoopsie I messed up"); // this shouldn't happen
+        return null;
+    }
+
+    protected void displayImage(int frameNum) {
+
+        try {
+            NativeImage image = NativeImage.read(readGifFrame(frameNum));
+            for (int x = 0; x < SCREEN_WIDTH; x++) {
+                for (int y = 0; y < SCREEN_HEIGHT; y++) {
+                    this.SCREEN.setPixelRGBA(x,y, image.getPixelRGBA(x,y));
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @Override
     public void init() {
         super.init();
@@ -68,6 +110,9 @@ public class TTabletScreen extends Screen {
         this.SCREEN = new NativeImage(1144, 912, true);
         this.SCREEN_TEXTURE = new DynamicTexture(SCREEN);
         this.SCREEN_TEXTURE_LOCATION = Minecraft.getInstance().getTextureManager().getDynamicTextureLocation("ttablet_screen", SCREEN_TEXTURE);
+
+
+
     }
 
     @Override
@@ -79,7 +124,10 @@ public class TTabletScreen extends Screen {
         Minecraft.getInstance().getTextureManager().bindTexture(RESOURCE_BACKGROUND);
         this.blit(matrix, centerX, centerY, 0, 0, WIDTH, HEIGHT);
 
-        displayColors();
+        //displayColors();
+        displayImage(1);
+
+
         RenderSystem.scalef(DOWNSCALED_VALUE, DOWNSCALED_VALUE, DOWNSCALED_VALUE);
 
 
