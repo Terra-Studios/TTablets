@@ -9,9 +9,9 @@ import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
 
-public class TTabletItemGroup extends ItemGroup {
+public final class TTabletItemGroup extends ItemGroup {
 
-    public static final TTabletItemGroup INSTANCE = new TTabletItemGroup(() -> new ItemStack(TTabletRegistry.TTABLET_ITEM.get()));
+    private static final TTabletItemGroup INSTANCE = new TTabletItemGroup(() -> new ItemStack(TTabletRegistry.TTABLET_ITEM.get()));
 
     private final Supplier<ItemStack> ICON;
 
@@ -19,6 +19,10 @@ public class TTabletItemGroup extends ItemGroup {
     public TTabletItemGroup(Supplier<ItemStack> item) {
         super(new TranslationTextComponent("ttablets").getKey());
         this.ICON = item;
+    }
+
+    public static TTabletItemGroup getInstance() {
+        return INSTANCE;
     }
 
     @Override

@@ -3,19 +3,21 @@ package dev.sebastianb.ttablets.client.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.sebastianb.ttablets.TTablets;
+import dev.sebastianb.ttablets.api.IApplication;
 import dev.sebastianb.ttablets.helper.ByteBuffer2D;
 import dev.sebastianb.ttablets.helper.GIF;
+import dev.sebastianb.ttablets.helper.RunningTime;
+import dev.sebastianb.ttablets.util.ApplicationRegistry;
+import dev.sebastianb.ttablets.util.TTabletRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
-import org.lwjgl.BufferUtils;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
-import java.util.TimerTask;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -40,7 +42,7 @@ public class TTabletScreen extends Screen {
 
     private BufferedImage SCREEN;
 
-    private final BootTime bootTime = new BootTime();
+    private final RunningTime bootTime = new RunningTime();
 
 
     public TTabletScreen() {
@@ -67,8 +69,13 @@ public class TTabletScreen extends Screen {
         Minecraft.getInstance().getTextureManager().bindTexture(RESOURCE_BACKGROUND);
         this.blit(matrix, centerX, centerY, 0, 0, WIDTH, HEIGHT);
 
-        // testing, remember instead to render the GIF to part of this.SCREEN and render that
-        displayGLImage(TEST_GIF.getCurrentFrameAsByteBuffer2D());
+        IApplication app = TTabletRegistry.APPLICATION_REGISTRY.getActiveApplication();
+        if (app.getUpTimeSeconds() <= 2) {
+            Minecraft.getInstance().getTextureManager().bindTexture(app.getLoadingScreen());
+            this.blit(matrix, centerX + SCREEN_PLACE_WIDTH, centerY + SCREEN_PLACE_HEIGHT, 0, 0, WIDTH, HEIGHT);
+        } else {
+            displayGLImage(ByteBuffer2D.getByteBuffer2D(resize(app.render(this.SCREEN, mouseX, mouseY))));
+        }
         super.render(matrix, mouseX, mouseY, partialTicks);
     }
 
@@ -98,53 +105,22 @@ public class TTabletScreen extends Screen {
             }
         }
     }
-    /*
-    private void displayImage(MatrixStack matrix, NativeImage image, int frameNum) {
-        try {
-            NativeImage newImage = NativeImage.read(Objects.requireNonNull(readGifFrame(frameNum)));
-            for (int x = 0; x < SCREEN_WIDTH; x++) {
-                for (int y = 0; y < SCREEN_HEIGHT; y++) {
-                    image.setPixelRGBA(x,y, newImage.getPixelRGBA(x,y));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        this.SCREEN_TEXTURE.updateDynamicTexture();
-        RenderSystem.scalef(DOWNSCALED_VALUE, DOWNSCALED_VALUE, DOWNSCALED_VALUE);
-        Minecraft.getInstance().getTextureManager().bindTexture(SCREEN_TEXTURE_LOCATION);
-        this.blit(matrix,
-                ((width / 2) * SCALED_NUMBER) - (96 * SCALED_NUMBER),
-                ((height / 2) * SCALED_NUMBER) - (37 * SCALED_NUMBER),
-                0, 0,
-                SCREEN_WIDTH, SCREEN_HEIGHT);
-    }*/
 
     /**
      * A cheaper way of rendering, rather than updating a DynamicTexture every frame.
      * @param image The image to render.
      */
-    public void displayGLImage(ByteBuffer2D image) {
+    private void displayGLImage(ByteBuffer2D image) {
         // render as 2D image, max LOD Level, width, height, no border, alpha on, texel data type (idk what that is), and texture
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) image.getBuffer().flip());
     }
 
-
-    private static class BootTime extends TimerTask {
-
-        private long number;
-
-        @Override
-        public void run() {
-            number = System.currentTimeMillis();
-        }
-
-        public long getTime() {
-            return System.currentTimeMillis() - number;
-        }
-
-        public int getTimeSeconds() {
-            return (int)(System.currentTimeMillis() - number) / 1000;
-        }
+    private static BufferedImage resize(final BufferedImage img) {
+        Image tmp = img.getScaledInstance(TTabletScreen.SCREEN_WIDTH, TTabletScreen.SCREEN_HEIGHT, Image.SCALE_SMOOTH);
+        BufferedImage dimg = new BufferedImage(TTabletScreen.SCREEN_WIDTH, TTabletScreen.SCREEN_HEIGHT, img.getType());
+        Graphics2D g2d = dimg.createGraphics();
+        g2d.drawImage(tmp, 0, 0, null);
+        g2d.dispose();
+        return dimg;
     }
 }

@@ -15,10 +15,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 
 
-public class TTabletItem extends Item {
+public final class TTabletItem extends Item {
 
     public TTabletItem() {
-        super(new Item.Properties().maxStackSize(1).group(TTabletItemGroup.INSTANCE));
+        super(new Item.Properties().maxStackSize(1).group(TTabletItemGroup.getInstance()));
     }
 
     @Override

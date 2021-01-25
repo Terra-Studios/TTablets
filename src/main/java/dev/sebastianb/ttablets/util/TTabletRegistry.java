@@ -13,4 +13,5 @@ public final class TTabletRegistry {
     public static final DeferredRegister<Item> ITEM_REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, TTablets.MOD_ID);
 
     public static final RegistryObject<Item> TTABLET_ITEM = ITEM_REGISTRY.register("ttablet", TTabletItem::new);
+    public static final ApplicationRegistry APPLICATION_REGISTRY = new ApplicationRegistry();
 }
