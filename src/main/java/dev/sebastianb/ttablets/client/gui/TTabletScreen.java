@@ -3,6 +3,7 @@ package dev.sebastianb.ttablets.client.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.sebastianb.ttablets.TTablets;
+import dev.sebastianb.ttablets.helper.ByteBuffer2D;
 import dev.sebastianb.ttablets.helper.GIF;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -67,7 +68,7 @@ public class TTabletScreen extends Screen {
         this.blit(matrix, centerX, centerY, 0, 0, WIDTH, HEIGHT);
 
         // testing, remember instead to render the GIF to part of this.SCREEN and render that
-        displayGLImage(TEST_GIF.getCurrentFrame());
+        displayGLImage(TEST_GIF.getCurrentFrameAsByteBuffer2D());
         super.render(matrix, mouseX, mouseY, partialTicks);
     }
 
@@ -123,25 +124,9 @@ public class TTabletScreen extends Screen {
      * A cheaper way of rendering, rather than updating a DynamicTexture every frame.
      * @param image The image to render.
      */
-    public void displayGLImage(BufferedImage image) {
-        int[] pixels = new int[image.getWidth() * image.getHeight()];
-        image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
-        ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * 4); // 4 being bytes per pixel
-        for (int y = 0; y < image.getHeight(); y++) {
-            for (int x = 0; x < image.getWidth(); x++) {
-                int pixel = pixels[y * image.getWidth() + x];
-                buffer.put((byte)((pixel >> 16) & 0xFF));
-                buffer.put((byte)((pixel >> 8) & 0xFF));
-                buffer.put((byte)(pixel & 0xFF));
-                buffer.put((byte)((pixel >> 24) & 0xFF));
-            }
-        }
-        displayGLImage(buffer, image.getWidth(), image.getHeight());
-    }
-
-    public void displayGLImage(ByteBuffer image, int width, int height) {
+    public void displayGLImage(ByteBuffer2D image) {
         // render as 2D image, max LOD Level, width, height, no border, alpha on, texel data type (idk what that is), and texture
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) image.flip());
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) image.getBuffer().flip());
     }
 
 
