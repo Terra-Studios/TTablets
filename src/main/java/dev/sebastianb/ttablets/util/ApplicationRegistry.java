@@ -8,6 +8,7 @@ import java.util.HashMap;
 public final class ApplicationRegistry {
 
     private String ACTIVE_APPLICATION_ID = null;
+    private boolean loaded = false;
     private final HashMap<String,IApplication> APPLICATIONS = new HashMap<>();
 
 
@@ -37,6 +38,21 @@ public final class ApplicationRegistry {
             APPLICATIONS.get(ID).setActive(true);
         } else
             throw new IDNotFoundException("Application ID not registered");
+    }
+
+    public void load() {
+        resetAll();
+        if (!loaded) {
+            for (IApplication application : APPLICATIONS.values())
+                application.initResources();
+            loaded = true;
+        }
+    }
+
+    public void resetAll() {
+        for (IApplication application : APPLICATIONS.values()) {
+            application.resetUpTime();
+        }
     }
 
 

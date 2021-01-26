@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
 
 public final class TabletOS extends IApplication {
 
-    private final GIF TEST_GIF = new GIF(new ResourceLocation(TTablets.MOD_ID, "media/gif/weeb.gif"));
+    private GIF TEST_GIF;
 
 
     public TabletOS() {
@@ -25,8 +25,13 @@ public final class TabletOS extends IApplication {
     }
 
     @Override
+    public void initResources() {
+        TEST_GIF = new GIF(new ResourceLocation(TTablets.MOD_ID, "media/gif/weeb.gif"));
+    }
+
+    @Override
     @Nonnull
-    public BufferedImage render(@Nonnull final BufferedImage previousFrame, int pixelX, int pixelY) {
-        return TEST_GIF.getCurrentFrame();
+    public ByteBuffer2D render(@Nonnull final BufferedImage previousFrame, int pixelX, int pixelY) {
+        return TEST_GIF.getCurrentFrameAsByteBuffer2D();
     }
 }

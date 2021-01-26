@@ -1,5 +1,6 @@
 package dev.sebastianb.ttablets.api;
 
+import dev.sebastianb.ttablets.helper.ByteBuffer2D;
 import dev.sebastianb.ttablets.helper.RunningTime;
 import dev.sebastianb.ttablets.util.ApplicationRegistry;
 import dev.sebastianb.ttablets.util.TTabletRegistry;
@@ -38,6 +39,11 @@ public abstract class IApplication {
         this.RUNTIME = new RunningTime();
         this.register();
     }
+
+    /**
+     * Initialize all Minecraft resource-related things here. This function runs when loading a world.
+     */
+    public abstract void initResources();
 
     /**
      * Registers the application.
@@ -109,13 +115,25 @@ public abstract class IApplication {
     }
 
     /**
+     * Resets the uptime.
+     */
+    public final void resetUpTime() {
+        this.RUNTIME.run();
+    }
+
+    /**
      * Renders the application to the screen. It is only called when the application is active. Please return the input image if nothing has been modified.
+     * You can use a helper method in ByteBuffer2D to convert a BufferedImage to a ByteBuffer2D.
+     *
+     * TODO: it doesn't actually give you the real last frame right now, sorry about that
+     *
      * @param previousFrame The previously drawn frame.
      * @param mouseX The X position of the mouse, from 0 to 1144.
      * @param mouseY The Y position of the mouse, from 0 to 912.
+     * @return The ByteBuffer2D to render.
      */
     @Nonnull
-    public abstract BufferedImage render(@Nonnull final BufferedImage previousFrame, int mouseX, int mouseY);
+    public abstract ByteBuffer2D render(@Nonnull final BufferedImage previousFrame, int mouseX, int mouseY);
 
     /**
      * Fired when the mouse is pressed and the application is active.

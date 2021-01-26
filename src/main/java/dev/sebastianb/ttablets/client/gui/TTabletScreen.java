@@ -26,9 +26,6 @@ public class TTabletScreen extends Screen {
 
     private static final ResourceLocation RESOURCE_BACKGROUND = new ResourceLocation(TTablets.MOD_ID, "textures/gui/ttablet_background.png");
 
-    // for testing GIFs
-    private final GIF TEST_GIF = new GIF(new ResourceLocation(TTablets.MOD_ID, "media/gif/weeb.gif"));
-
     private static final int WIDTH                  = 243;
     private static final int HEIGHT                 = 209;
     // SCREEN_PLACE_WIDTH and SCREEN_PLACE_HEIGHT are the base resolution in pixels
@@ -55,7 +52,7 @@ public class TTabletScreen extends Screen {
         this.bootTime.run();
         this.buttons.clear();
         this.SCREEN = new BufferedImage(1144, 912, BufferedImage.TYPE_INT_ARGB);
-        this.TEST_GIF.reset();
+        TTabletRegistry.APPLICATION_REGISTRY.load();
     }
 
     @Override
@@ -72,9 +69,10 @@ public class TTabletScreen extends Screen {
         IApplication app = TTabletRegistry.APPLICATION_REGISTRY.getActiveApplication();
         if (app.getUpTimeSeconds() <= 2) {
             Minecraft.getInstance().getTextureManager().bindTexture(app.getLoadingScreen());
-            this.blit(matrix, centerX + SCREEN_PLACE_WIDTH, centerY + SCREEN_PLACE_HEIGHT, 0, 0, WIDTH, HEIGHT);
+            this.blit(matrix, ((width / 2) * SCALED_NUMBER) - (96 * SCALED_NUMBER), ((height / 2) * SCALED_NUMBER) - (37 * SCALED_NUMBER), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         } else {
-            displayGLImage(ByteBuffer2D.getByteBuffer2D(resize(app.render(this.SCREEN, mouseX, mouseY))));
+            ByteBuffer2D render = app.render(this.SCREEN, mouseX, mouseY);
+            displayGLImage(render);
         }
         super.render(matrix, mouseX, mouseY, partialTicks);
     }
@@ -115,6 +113,11 @@ public class TTabletScreen extends Screen {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) image.getBuffer().flip());
     }
 
+    /**
+     * From StackOverflow.
+     * @param img The image to resize to the screen dimensions.
+     * @return The resized image.
+     */
     private static BufferedImage resize(final BufferedImage img) {
         Image tmp = img.getScaledInstance(TTabletScreen.SCREEN_WIDTH, TTabletScreen.SCREEN_HEIGHT, Image.SCALE_SMOOTH);
         BufferedImage dimg = new BufferedImage(TTabletScreen.SCREEN_WIDTH, TTabletScreen.SCREEN_HEIGHT, img.getType());
