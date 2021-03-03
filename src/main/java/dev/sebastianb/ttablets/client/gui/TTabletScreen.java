@@ -69,7 +69,8 @@ public class TTabletScreen extends Screen {
         IApplication app = TTabletRegistry.APPLICATION_REGISTRY.getActiveApplication();
         if (app.getUpTimeSeconds() <= 2) {
             Minecraft.getInstance().getTextureManager().bindTexture(app.getLoadingScreen());
-            this.blit(matrix, centerX, centerY, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            // warning: 256 and 210 are kinda hacky, replace when you find a formula
+            this.blit(matrix, centerX, centerY, 0, 0, 256, 210);
         } else {
             ByteBuffer2D render = app.render(this.SCREEN, mouseX, mouseY);
             displayGLImage(render);
