@@ -1,24 +1,22 @@
-package dev.sebastianb.ttablets.util;
-
-import dev.sebastianb.ttablets.api.IApplication;
+package dev.sebastianb.ttablets.api;
 
 import java.util.HashMap;
 
-
 public final class ApplicationRegistry {
+
+    public static final ApplicationRegistry APPLICATION_REGISTRY = new ApplicationRegistry();
 
     private String ACTIVE_APPLICATION_ID = null;
     private boolean loaded = false;
-    private final HashMap<String,IApplication> APPLICATIONS = new HashMap<>();
+    private final HashMap<String,Application> APPLICATIONS = new HashMap<>();
 
-
-    public void addApplication(IApplication application) {
+    public void addApplication(Application application) {
         if (!isApplicationRegistered(application)) {
             APPLICATIONS.put(application.getID(), application);
         }
     }
 
-    public boolean isApplicationRegistered(IApplication application) {
+    public boolean isApplicationRegistered(Application application) {
         return APPLICATIONS.containsKey(application.getID());
     }
 
@@ -26,7 +24,7 @@ public final class ApplicationRegistry {
         return ACTIVE_APPLICATION_ID;
     }
 
-    public IApplication getActiveApplication() {
+    public Application getActiveApplication() {
         return APPLICATIONS.get(ACTIVE_APPLICATION_ID);
     }
 
@@ -43,18 +41,17 @@ public final class ApplicationRegistry {
     public void load() {
         resetAll();
         if (!loaded) {
-            for (IApplication application : APPLICATIONS.values())
+            for (Application application : APPLICATIONS.values())
                 application.initResources();
             loaded = true;
         }
     }
 
     public void resetAll() {
-        for (IApplication application : APPLICATIONS.values()) {
+        for (Application application : APPLICATIONS.values()) {
             application.resetUpTime();
         }
     }
-
 
     public static final class IDNotFoundException extends Exception {
         public IDNotFoundException(String error) {

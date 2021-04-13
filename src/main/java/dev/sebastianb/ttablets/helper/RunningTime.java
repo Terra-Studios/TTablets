@@ -2,7 +2,6 @@ package dev.sebastianb.ttablets.helper;
 
 import java.util.TimerTask;
 
-
 public class RunningTime extends TimerTask {
 
     private long number;

@@ -1,30 +1,30 @@
 package dev.sebastianb.ttablets.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.sebastianb.ttablets.TTablets;
-import dev.sebastianb.ttablets.api.IApplication;
+import dev.sebastianb.ttablets.api.Application;
+import dev.sebastianb.ttablets.api.ApplicationRegistry;
 import dev.sebastianb.ttablets.helper.ByteBuffer2D;
-import dev.sebastianb.ttablets.helper.GIF;
 import dev.sebastianb.ttablets.helper.RunningTime;
-import dev.sebastianb.ttablets.util.ApplicationRegistry;
-import dev.sebastianb.ttablets.util.TTabletRegistry;
-import net.minecraft.client.Minecraft;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.Identifier;
+import net.minecraft.text.TranslatableText;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 
-
+@Environment(EnvType.CLIENT)
 public class TTabletScreen extends Screen {
 
-    private static final ResourceLocation RESOURCE_BACKGROUND = new ResourceLocation(TTablets.MOD_ID, "textures/gui/ttablet_background.png");
+    private static final Identifier RESOURCE_BACKGROUND = new Identifier(TTablets.MOD_ID, "textures/gui/ttablet_background.png");
 
     private static final int WIDTH                  = 243;
     private static final int HEIGHT                 = 209;
@@ -41,9 +41,8 @@ public class TTabletScreen extends Screen {
 
     private final RunningTime bootTime = new RunningTime();
 
-
     public TTabletScreen() {
-        super(new TranslationTextComponent("ttablets"));
+        super(new TranslatableText("ttablets"));
     }
 
     @Override
@@ -52,25 +51,25 @@ public class TTabletScreen extends Screen {
         this.bootTime.run();
         this.buttons.clear();
         this.SCREEN = new BufferedImage(1144, 912, BufferedImage.TYPE_INT_ARGB);
-        TTabletRegistry.APPLICATION_REGISTRY.load();
+        ApplicationRegistry.APPLICATION_REGISTRY.load();
     }
 
     @Override
-    public void render(@Nonnull MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrix);
 
         int centerX = (width / 2) - WIDTH / 2;
         int centerY = (height / 2) - HEIGHT / 2;
 
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getInstance().getTextureManager().bindTexture(RESOURCE_BACKGROUND);
-        this.blit(matrix, centerX, centerY, 0, 0, WIDTH, HEIGHT);
+        MinecraftClient.getInstance().getTextureManager().bindTexture(RESOURCE_BACKGROUND);
+        this.drawTexture(matrix, centerX, centerY, 0, 0, WIDTH, HEIGHT);
 
-        IApplication app = TTabletRegistry.APPLICATION_REGISTRY.getActiveApplication();
+        Application app = ApplicationRegistry.APPLICATION_REGISTRY.getActiveApplication();
         if (app.getUpTimeSeconds() <= 2) {
-            Minecraft.getInstance().getTextureManager().bindTexture(app.getLoadingScreen());
+            MinecraftClient.getInstance().getTextureManager().bindTexture(app.getLoadingScreen());
             // warning: 256 and 210 are kinda hacky, replace when you find a formula
-            this.blit(matrix, centerX, centerY, 0, 0, 256, 210);
+            this.drawTexture(matrix, centerX, centerY, 0, 0, 256, 210);
         } else {
             ByteBuffer2D render = app.render(this.SCREEN, mouseX, mouseY);
             displayGLImage(render);
@@ -84,9 +83,9 @@ public class TTabletScreen extends Screen {
     }
 
     @Override
-    public void closeScreen() {
+    public void onClose() {
         // TODO: save state of screen
-        super.closeScreen();
+        super.onClose();
     }
 
     /**

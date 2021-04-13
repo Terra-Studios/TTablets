@@ -1,8 +1,7 @@
 package dev.sebastianb.ttablets.helper;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.BufferUtils;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.Identifier;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -10,14 +9,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
-
 public class GIF {
 
-    private final ResourceLocation GIF;
+    private final Identifier GIF;
     private final GifDecoder DECODER;
     private final GifTimer TIMER;
     private final ArrayList<ByteBuffer2D> BYTE_BUFFER_FRAMES;
@@ -26,11 +23,11 @@ public class GIF {
      * Creates a GIF for use in rendering.
      * @param location The location of the GIF, in the resource pack format.
      */
-    public GIF(ResourceLocation location) {
+    public GIF(Identifier location) {
         this.GIF = location;
         this.DECODER = new GifDecoder();
         try {
-            this.DECODER.read(Minecraft.getInstance().getResourceManager().getResource(this.GIF).getInputStream());
+            this.DECODER.read(MinecraftClient.getInstance().getResourceManager().getResource(this.GIF).getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,7 +56,7 @@ public class GIF {
      * Returns the ResourceLocation pointing to the GIF.
      * @return The GIF's ResourceLocation.
      */
-    public ResourceLocation getResourceLocation() {
+    public Identifier getResourceLocation() {
         return this.GIF;
     }
 

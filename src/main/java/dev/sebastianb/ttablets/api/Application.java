@@ -2,23 +2,21 @@ package dev.sebastianb.ttablets.api;
 
 import dev.sebastianb.ttablets.helper.ByteBuffer2D;
 import dev.sebastianb.ttablets.helper.RunningTime;
-import dev.sebastianb.ttablets.util.ApplicationRegistry;
-import dev.sebastianb.ttablets.util.TTabletRegistry;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.Identifier;
+import net.minecraft.text.TranslatableText;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.awt.image.BufferedImage;
 
 /**
  * Extend this class to create a custom TTablets application.
  */
-public abstract class IApplication {
+public abstract class Application {
 
     private final String ID;
-    private final TranslationTextComponent NAME;
-    private final ResourceLocation ICON;
-    private final ResourceLocation LOADING_SCREEN;
+    private final TranslatableText NAME;
+    private final Identifier ICON;
+    private final Identifier LOADING_SCREEN;
 
     private boolean ACTIVE;
     final RunningTime RUNTIME;
@@ -31,7 +29,7 @@ public abstract class IApplication {
      * @param icon The path to the user-friendly icon of the app. Size must be a power of 2. Recommended size is 64x64.
      * @param loadingScreen The path to the screen. It is currently 1144 x 912 pixels. It will display when your app starts.
      */
-    public IApplication(@Nonnull String ID, @Nonnull TranslationTextComponent name, @Nonnull ResourceLocation icon, @Nonnull ResourceLocation loadingScreen) {
+    public Application(@NotNull String ID, @NotNull TranslatableText name, @NotNull Identifier icon, @NotNull Identifier loadingScreen) {
         this.ID = ID;
         this.NAME = name;
         this.ICON = icon;
@@ -49,13 +47,13 @@ public abstract class IApplication {
      * Registers the application.
      */
     private void register() {
-        TTabletRegistry.APPLICATION_REGISTRY.addApplication(this);
+        ApplicationRegistry.APPLICATION_REGISTRY.addApplication(this);
     }
 
     /**
      * @return The ID of the application.
      */
-    @Nonnull
+    @NotNull
     public final String getID() {
         return this.ID;
     };
@@ -63,31 +61,30 @@ public abstract class IApplication {
     /**
      * @return The user-friendly name of the app.
      */
-    @Nonnull
-    public final TranslationTextComponent getDisplayName() {
+    @NotNull
+    public final TranslatableText getDisplayName() {
         return this.NAME;
     };
 
     /**
      * @return The path to the user-friendly icon of the app. Size must be a power of 2. Recommended size is 64x64.
      */
-    @Nonnull
-    public final ResourceLocation getIcon() {
+    @NotNull
+    public final Identifier getIcon() {
         return this.ICON;
     };
 
     /**
      * @return The path to the loading screen of the application.
      */
-    @Nonnull
-    public final ResourceLocation getLoadingScreen() {
+    @NotNull
+    public final Identifier getLoadingScreen() {
         return this.LOADING_SCREEN;
     };
 
     /**
      * @return Whether this application is running or not.
      */
-    @Nonnull
     public final boolean getActive() {
         return this.ACTIVE;
     }
@@ -96,7 +93,7 @@ public abstract class IApplication {
      * This function should only be called by the active Tablet OS. Please do not touch it!
      * @param active Whether the application is active or not.
      */
-    public final void setActive(@Nonnull boolean active) {
+    public final void setActive(boolean active) {
         this.ACTIVE = active;
     }
 
@@ -132,8 +129,8 @@ public abstract class IApplication {
      * @param mouseY The Y position of the mouse, from 0 to 912.
      * @return The ByteBuffer2D to render.
      */
-    @Nonnull
-    public abstract ByteBuffer2D render(@Nonnull final BufferedImage previousFrame, int mouseX, int mouseY);
+    @NotNull
+    public abstract ByteBuffer2D render(@NotNull final BufferedImage previousFrame, int mouseX, int mouseY);
 
     /**
      * Fired when the mouse is pressed and the application is active.

@@ -1,97 +1,80 @@
-buildscript {
-    repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
-    }
-}
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-
-version = '1.0'
-group = 'dev.sebastianb.ttablets'
-archivesBaseName = 'ttablets'
-
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
-
-minecraft {
-    mappings channel: 'snapshot', version: '20201028-1.16.3'
-    
-    runs {
-        client {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                ttablets {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                ttablets {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            args '--mod', 'ttablets', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                ttablets {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
+plugins {
+	id 'fabric-loom' version '0.6-SNAPSHOT'
+	id 'maven-publish'
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+archivesBaseName = project.archives_base_name
+version = project.mod_version
+group = project.maven_group
+
+repositories {
+    mavenLocal()
+	maven {
+		url "https://maven.terraformersmc.com/"
+		content {
+			includeGroup("com.terraformersmc")
+		}
+	}
+	jcenter()
+}
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.5-36.0.44'
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") { transitive = false }
+}
+
+processResources {
+	inputs.property "version", project.version
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	// If Javadoc is generated, this must be specified in that task too.
+	it.options.encoding = "UTF-8"
+
+	def targetVersion = 8
+	if (JavaVersion.current().isJava9Compatible()) {
+		 it.options.release = targetVersion
+	}
+}
+
+java {
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
 }
 
 jar {
-    manifest {
-        attributes([
-            "Specification-Title": "ttablets",
-            "Specification-Vendor": "ttablets",
-            "Specification-Version": "1", // We are version 1 of ourselves
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"ttablets",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
+	from("LICENSE") {
+		rename {"${it}_${project.archivesBaseName}"}
+	}
 }
 
-jar.finalizedBy('reobfJar') 
-
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
-    }
-    repositories {
-        maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
-        }
-    }
+	publications {
+		mavenJava(MavenPublication) {
+			// add all the jars that should be included when publishing to maven
+			artifact(remapJar) {
+				builtBy remapJar
+			}
+			artifact(sourcesJar) {
+				builtBy remapSourcesJar
+			}
+		}
+	}
+
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+	repositories {
+		// Add repositories to publish to here.
+		// Notice: This block does NOT have the same function as the block in the top level.
+		// The repositories here will be used for publishing your artifact, not for
+		// retrieving dependencies.
+	}
 }

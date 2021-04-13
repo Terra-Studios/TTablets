@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "ttablets",
+  "version": "${version}",
+
+  "name": "TTablets",
+  "description": "Adds a tablet to the game, so you can play games inside a game.",
+  "authors": [
+    "SebaSphere#0001",
+	"craftablescience#6001"
+  ],
+  "contact": {
+    "homepage": "https://discord.gg/NdGUSdNAJQ",
+    "sources": "https://github.com/Terra-Studios/TTablets"
+  },
+
+  "license": "MIT",
+  "icon": "assets/ttablets/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.sebastianb.ttablets.TTablets"
+    ],
+    "client": [
+      "dev.sebastianb.ttablets.client.TTabletsClient"
+    ]
+  },
+  "mixins": [
+    "ttablets.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

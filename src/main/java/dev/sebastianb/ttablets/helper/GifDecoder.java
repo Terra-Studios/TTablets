@@ -38,7 +38,8 @@ import java.util.ArrayList;
  * @version 1.03 November 2003
  *
  */
-public class GifDecoder {
+@SuppressWarnings("ALL")
+public final class GifDecoder {
 
     /**
      * File read status: No errors.

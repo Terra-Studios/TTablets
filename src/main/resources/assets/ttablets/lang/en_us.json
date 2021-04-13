@@ -1,5 +1,5 @@
 {
-  "itemGroup.ttablets": "TTablets",
+  "itemGroup.ttablets.general": "TTablets",
   "item.ttablets.ttablet": "TTablet",
   "gui.ttablets_os.title": "TabletOS"
 }

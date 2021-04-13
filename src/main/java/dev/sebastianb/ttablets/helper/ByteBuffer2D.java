@@ -5,7 +5,6 @@ import org.lwjgl.BufferUtils;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 
-
 public class ByteBuffer2D {
 
     private final ByteBuffer buffer;
