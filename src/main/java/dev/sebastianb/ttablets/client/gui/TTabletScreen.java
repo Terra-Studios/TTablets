@@ -49,7 +49,7 @@ public class TTabletScreen extends Screen {
     public void init() {
         super.init();
         this.bootTime.run();
-        this.buttons.clear();
+        this.children().clear();
         this.SCREEN = new BufferedImage(1144, 912, BufferedImage.TYPE_INT_ARGB);
         ApplicationRegistry.APPLICATION_REGISTRY.load();
     }
@@ -61,7 +61,7 @@ public class TTabletScreen extends Screen {
         int centerX = (width / 2) - WIDTH / 2;
         int centerY = (height / 2) - HEIGHT / 2;
 
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        //RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         MinecraftClient.getInstance().getTextureManager().bindTexture(RESOURCE_BACKGROUND);
         this.drawTexture(matrix, centerX, centerY, 0, 0, WIDTH, HEIGHT);
 
