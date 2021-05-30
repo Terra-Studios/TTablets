@@ -1,2 +1,2 @@
-# TTablets - 1.16.5 Branch
+# TTablets - 1.17 Branch
 Work in progress device mod.
