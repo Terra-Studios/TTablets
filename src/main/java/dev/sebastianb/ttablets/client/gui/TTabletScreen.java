@@ -1,6 +1,5 @@
 package dev.sebastianb.ttablets.client.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import dev.sebastianb.ttablets.TTablets;
 import dev.sebastianb.ttablets.api.Application;
 import dev.sebastianb.ttablets.api.ApplicationRegistry;
@@ -34,8 +33,6 @@ public class TTabletScreen extends Screen {
     private static final int SCALED_NUMBER          = 8;
     private static final int SCREEN_WIDTH           = SCREEN_PLACE_WIDTH * SCALED_NUMBER;  // 1144
     private static final int SCREEN_HEIGHT          = SCREEN_PLACE_HEIGHT * SCALED_NUMBER; //  912
-    // used to properly scale the screen
-    private static final float DOWNSCALED_VALUE     = 1f / SCALED_NUMBER;
 
     private BufferedImage SCREEN;
 
@@ -61,7 +58,6 @@ public class TTabletScreen extends Screen {
         int centerX = (width / 2) - WIDTH / 2;
         int centerY = (height / 2) - HEIGHT / 2;
 
-        //RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         MinecraftClient.getInstance().getTextureManager().bindTexture(RESOURCE_BACKGROUND);
         this.drawTexture(matrix, centerX, centerY, 0, 0, WIDTH, HEIGHT);
 
@@ -89,41 +85,11 @@ public class TTabletScreen extends Screen {
     }
 
     /**
-     * Old debug method, puts various colors on this.SCREEN
-     */
-    private void displayColors() {
-        int red = 0xFF0000;
-        int green = 0x00FF00;
-        int blue = 0x0000FF;
-
-        int color = new int[]{red, green, blue}[this.bootTime.getTimeSeconds() % 3];
-        for (int x = 0; x < SCREEN_WIDTH; x++) {
-            for (int y = 0; y < SCREEN_HEIGHT; y++) {
-                this.SCREEN.setRGB(x, y, color);
-            }
-        }
-    }
-
-    /**
      * A cheaper way of rendering, rather than updating a DynamicTexture every frame.
      * @param image The image to render.
      */
     private void displayGLImage(ByteBuffer2D image) {
         // render as 2D image, max LOD Level, width, height, no border, alpha on, texel data type (idk what that is), and texture
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) image.getBuffer().flip());
-    }
-
-    /**
-     * From StackOverflow.
-     * @param img The image to resize to the screen dimensions.
-     * @return The resized image.
-     */
-    private static BufferedImage resize(final BufferedImage img) {
-        Image tmp = img.getScaledInstance(TTabletScreen.SCREEN_WIDTH, TTabletScreen.SCREEN_HEIGHT, Image.SCALE_SMOOTH);
-        BufferedImage dimg = new BufferedImage(TTabletScreen.SCREEN_WIDTH, TTabletScreen.SCREEN_HEIGHT, img.getType());
-        Graphics2D g2d = dimg.createGraphics();
-        g2d.drawImage(tmp, 0, 0, null);
-        g2d.dispose();
-        return dimg;
     }
 }
